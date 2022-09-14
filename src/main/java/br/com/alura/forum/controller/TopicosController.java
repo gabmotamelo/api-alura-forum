@@ -8,6 +8,7 @@ import br.com.alura.forum.model.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +48,9 @@ public class TopicosController {
 
     @PostMapping
     @Transactional
+    //parâmetro para limpar todos os registros, que é o allEntries = true. No nosso caso,
+    // quero limpar todos os registros para ele atualizar tudo e deixar o cache zerado de novo.
+    @CacheEvict(value = "listaDeTopicos", allEntries = true )
     public ResponseEntity<TopicoDTO> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriComponentsBuilder){
         Topico topico = form.converter(cursoRepository);
         topicoRepository.save(topico);
@@ -65,6 +69,9 @@ public class TopicosController {
 
     @PutMapping("/{id}")
     @Transactional
+    //parâmetro para limpar todos os registros, que é o allEntries = true. No nosso caso,
+    // quero limpar todos os registros para ele atualizar tudo e deixar o cache zerado de novo.
+    @CacheEvict(value = "listaDeTopicos", allEntries = true )
     public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm form){
          Topico topico = form.atualizar(id, topicoRepository);
          return ResponseEntity.ok(new TopicoDTO(topico));
@@ -72,6 +79,9 @@ public class TopicosController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    //parâmetro para limpar todos os registros, que é o allEntries = true. No nosso caso,
+    // quero limpar todos os registros para ele atualizar tudo e deixar o cache zerado de novo.
+    @CacheEvict(value = "listaDeTopicos", allEntries = true )
     public ResponseEntity<?> remover(@PathVariable Long id){
         Optional<Topico> optional = Optional.ofNullable(topicoRepository.carregarComRespostas(id));
         if (optional.isPresent()){
