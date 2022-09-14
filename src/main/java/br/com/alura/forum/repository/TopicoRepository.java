@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TopicoRepository extends JpaRepository<Topico, Long> {
 
-
-
     @Query("SELECT t FROM Topico t LEFT JOIN FETCH t.respostas WHERE t.id = :id")
     public Topico carregarComRespostas(Long id);
 
