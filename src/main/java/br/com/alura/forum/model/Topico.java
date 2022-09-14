@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Topico {
@@ -14,14 +15,6 @@ public class Topico {
 	private String titulo;
 	private String mensagem;
 	private LocalDateTime dataCriacao = LocalDateTime.now();
-
-	public Topico(){}
-
-	public Topico(String titulo, String mensagem, Curso curso) {
-		this.titulo = titulo;
-		this.mensagem = mensagem;
-		this.curso = curso;
-	}
 
 	@Enumerated(EnumType.STRING)
 	private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
@@ -35,29 +28,25 @@ public class Topico {
 	@OneToMany(mappedBy = "topico")
 	private List<Resposta> respostas = new ArrayList<>();
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
+	public Topico(){}
+
+	public Topico(String titulo, String mensagem, Curso curso) {
+		this.titulo = titulo;
+		this.mensagem = mensagem;
+		this.curso = curso;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Topico other = (Topico) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Topico topico = (Topico) o;
+		return Objects.equals(id, topico.id) && Objects.equals(titulo, topico.titulo) && Objects.equals(mensagem, topico.mensagem) && Objects.equals(dataCriacao, topico.dataCriacao) && status == topico.status && Objects.equals(autor, topico.autor) && Objects.equals(curso, topico.curso) && Objects.equals(respostas, topico.respostas);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, titulo, mensagem, dataCriacao, status, autor, curso, respostas);
 	}
 
 	public Long getId() {
